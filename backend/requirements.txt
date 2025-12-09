@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+spacy
+sqlmodel
+pydantic
+python-multipart
+PyPDF2
+pdfplumber
+scikit-learn
+litellm
+python-dotenv
+python-jose[cryptography]
+passlib[bcrypt]
