@@ -1,9 +1,31 @@
 # JobSync AI Pro — AI-Powered ATS Resume Optimiser  
 
+## Screenshots
+
+---
+
+## **Screenshots**
+
+### **Whole Application**
+
+<img width="1920" height="1080" alt="Whole Application" src="https://github.com/user-attachments/assets/ff76800a-9792-41bc-bf2c-b6af91ec3718" />
+
+---
+
+### **AI Rewrite Suggestions**
+
+<img width="1920" height="904" alt="AI Rewrite Suggestions" src="https://github.com/user-attachments/assets/fd76f7b1-9b37-412f-97cb-d71da4c1381f" />
+
+---
+
+### **Match Score & Radar**
+
+<img width="1920" height="900" alt="Match Score & Radar" src="https://github.com/user-attachments/assets/c5e5e9d0-6097-4e94-852c-ae4412689004" />
+
+---
+
 **Beat any Applicant Tracking System in seconds.**  
 Upload your resume + job description → Get instant match score, missing keywords & AI-generated bullet points that get you past filters.
-
-Live Demo: http://localhost:3000 (or deploy link once live)
 
 ## Features
 - PDF resume & JD upload with smart text extraction  
@@ -20,12 +42,6 @@ Live Demo: http://localhost:3000 (or deploy link once live)
 
 **Frontend**  
 `Next.js 14 (App Router) • Tailwind CSS • Recharts • Lucide Icons`
-
-## Screenshots
-
-| Match Score & Radar | AI Rewrite Suggestions | Missing vs Matched Keywords |
-|---------------------|-------------------------|-----------------------------|
-| ![Score](screenshots/score.png) | ![Suggestions](screenshots/suggestions.png) | ![Keywords](screenshots/keywords.png) |
 
 ## How to Run
 ```bash
