@@ -2,10 +2,6 @@
 
 ## Screenshots
 
----
-
-## **Screenshots**
-
 ### **Whole Application**
 
 <img width="1920" height="1080" alt="Whole Application" src="https://github.com/user-attachments/assets/ff76800a-9792-41bc-bf2c-b6af91ec3718" />
