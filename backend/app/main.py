@@ -1,28 +1,35 @@
-from fastapi import FastAPI, UploadFile, File, Form
+from fastapi import FastAPI, UploadFile, File, Form, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-from app.services.nlp_engine import calculate_match_score
-from app.services.llm_suggest import generate_suggestions
-from app.services.pdf_parser import extract_text_from_pdf
-from app.models import AnalysisHistory
-from app.database import engine
-from sqlmodel import Session
-from datetime import datetime
-from dotenv import load_dotenv
+import logging
 import os
+from .database import get_database_manager, get_repository
+from .models import SQLModel
+from .services.extraction import PDFTextExtractor
+from .services.analysis import NLPAnalysisEngine
+from .services.llm_service import GenericLLMService
+from .services.orchestrator import AnalysisOrchestrator
+from .interfaces import AnalysisResult
 
-# Load .env file
-load_dotenv()
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-FRONTEND_URL = os.getenv("FRONTEND_URL", "")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    from app.models import SQLModel
-    SQLModel.metadata.create_all(engine)
+    logger.info("Starting JobSync AI Pro...")
+    db_manager = get_database_manager()
+    db_manager.initialize_database()
     yield
+    logger.info("Shutting down JobSync AI Pro.")
 
-app = FastAPI(title="JobSync AI Pro", lifespan=lifespan)
+
+app = FastAPI(
+    title="JobSync AI Pro",
+    description="Professional AI-powered ATS resume optimizer",
+    version="3.0.0",
+    lifespan=lifespan,
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -32,43 +39,64 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+def get_orchestrator() -> AnalysisOrchestrator:
+    # Provider can be set via environment variable, defaults to gemini
+    llm_provider = os.getenv("LLM_PROVIDER", "gemini")
+    return AnalysisOrchestrator(
+        extractor=PDFTextExtractor(),
+        engine=NLPAnalysisEngine(),
+        suggestion_service=GenericLLMService(llm_provider),
+        repository=get_repository(),
+    )
+
+
 @app.get("/")
 def home():
-    return {"message": "JobSync AI Pro is running!", "version": "2.0"}
+    return {
+        "message": "JobSync AI Pro API is live",
+        "version": "3.0.0",
+        "status": "healthy",
+    }
 
-@app.post("/analyze")
+
+@app.post("/analyze", response_model=AnalysisResult)
 async def analyze(
     resume_file: UploadFile = File(...),
     jd_file: UploadFile = File(...),
-    job_title: str = Form("Software Engineer")
+    job_title: str = Form("Software Engineer"),
+    orchestrator: AnalysisOrchestrator = Depends(get_orchestrator),
 ):
-    resume_bytes = await resume_file.read()
-    jd_bytes = await jd_file.read()
+    try:
+        if not resume_file.filename.endswith(".pdf") or not jd_file.filename.endswith(
+            ".pdf"
+        ):
+            raise HTTPException(
+                status_code=400, detail="Only PDF files are supported at this time."
+            )
 
-    resume_text = extract_text_from_pdf(resume_bytes)
-    jd_text = extract_text_from_pdf(jd_bytes)
+        logger.info(f"Analyzing resume for position: {job_title}")
 
-    result = calculate_match_score(resume_text, jd_text)
-    suggestions = await generate_suggestions(result["missing_keywords"], resume_text, job_title)
+        resume_bytes = await resume_file.read()
+        jd_bytes = await jd_file.read()
 
-    # Save to history
-    with Session(engine) as session:
-        history = AnalysisHistory(
-            score=result["score"],
-            missing_keywords=str(result["missing_keywords"]),
-            suggestions=suggestions,
-            job_title=job_title
+        result = await orchestrator.run_analysis(resume_bytes, jd_bytes, job_title)
+        return result
+
+    except Exception as e:
+        logger.error(f"Analysis endpoint failed: {e}")
+        raise HTTPException(
+            status_code=500, detail="Internal server error during analysis."
         )
-        session.add(history)
-        session.commit()
 
-    return {
-        "score": result["score"],
-        "common_keywords": result["common_keywords"],
-        "missing_keywords": result["missing_keywords"],
-        "missing_with_weight": result["missing_with_weight"],
-        "suggestions": suggestions,
-        "job_title": job_title,
-        "resume_preview": resume_text[:500],
-        "jd_preview": jd_text[:300]
-    }
+
+@app.get("/history")
+async def get_history(orchestrator: AnalysisOrchestrator = Depends(get_orchestrator)):
+    history = await orchestrator.repository.get_history()
+    return {"history": history}
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
