@@ -9,5 +9,4 @@ pdfplumber
 scikit-learn
 litellm
 python-dotenv
-python-jose[cryptography]
-passlib[bcrypt]
+psycopg2-binary

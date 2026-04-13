@@ -2,9 +2,9 @@ Here's the complete updated setup instructions:
 
 1. **Create virtual environment** (highly recommended)
    ```bash
-   python -m venv venv
-   source venv/bin/activate          # Mac/Linux
-   # or: venv\Scripts\activate      # Windows PowerShell
+   python -m venv .venv
+   source .venv/bin/activate          # Mac/Linux
+   # or: .venv\Scripts\activate      # Windows PowerShell
    ```
 
 2. **Install all dependencies**
