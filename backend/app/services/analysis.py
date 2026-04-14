@@ -52,10 +52,10 @@ SKILL_DB = {
 }
 
 try:
-    nlp = spacy.load("en_core_web_lg")
+    nlp = spacy.load("en_core_web_sm")
 except OSError:
     logger.warning(
-        "Spacy model 'en_core_web_lg' not found. Keywords might be less accurate."
+        "Spacy model 'en_core_web_sm' not found. Keywords might be less accurate."
     )
     nlp = None
 
@@ -65,10 +65,20 @@ class NLPAnalysisEngine(IAnalysisEngine):
         self.stop_pos = {"PRON", "DET", "ADP", "CONJ", "CCONJ", "SCONJ", "PART"}
 
     def extract_keywords(self, text: str) -> List[str]:
-        if not nlp:
-            return []
+        text_low = text.lower()
 
-        doc = nlp(text.lower())
+        # Fallback simple keyword matching when SpaCy model is not available
+        if not nlp:
+            logger.warning(
+                "Spacy model not available; using simple SKILL_DB fallback extractor"
+            )
+            keywords = set()
+            for skill in SKILL_DB:
+                if skill in text_low:
+                    keywords.add(skill)
+            return list(keywords)
+
+        doc = nlp(text_low)
         keywords = set()
 
         for token in doc:
