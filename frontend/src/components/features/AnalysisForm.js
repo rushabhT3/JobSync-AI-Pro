@@ -28,7 +28,7 @@ const AnalysisForm = ({ files, onFilesChange, onSubmit, loading }) => {
       <button 
         onClick={onSubmit} 
         disabled={loading || !files.resume || !files.jd}
-        className="w-full mt-8 py-5 bg-[#0E3F35] text-white rounded-2xl font-display text-xl tracking-wide hover:bg-[#092C25] disabled:opacity-70 transition-all flex items-center justify-center gap-3"
+        className="w-full mt-8 py-5 bg-[#0E3F35] text-white rounded-2xl font-display text-xl tracking-wide hover:bg-[#092C25] disabled:opacity-70 transition-all flex items-center justify-center gap-3 cursor-pointer disabled:cursor-not-allowed"
       >
         {loading ? "Analyzing..." : (
           <>

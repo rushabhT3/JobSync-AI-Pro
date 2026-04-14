@@ -35,6 +35,12 @@ export default function Home() {
     }
   };
 
+  const handleReset = () => {
+    setFiles({ resume: null, jd: null });
+    setResult(null);
+    setLoading(false);
+  };
+
   return (
     <div className="min-h-screen bg-[#FDFBF7] text-[#1A1A1A] font-sans selection:bg-[#E5F0D0]">
       <Head>
@@ -68,7 +74,20 @@ export default function Home() {
             {!result ? (
               <FeatureShowcase />
             ) : (
-              <AnalysisResults result={result} />
+              <div>
+                <div className="mb-6 flex justify-end">
+                  <button
+                    onClick={handleReset}
+                    className="px-8 py-4 bg-[#0E3F35] text-white rounded-2xl font-display text-lg tracking-wide hover:bg-[#092C25] transition-all flex items-center gap-3 cursor-pointer"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Start Over
+                  </button>
+                </div>
+                <AnalysisResults result={result} />
+              </div>
             )}
           </div>
         </div>
