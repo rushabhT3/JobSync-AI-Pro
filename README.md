@@ -29,7 +29,7 @@ Upload your resume + job description → Get instant match score, missing keywor
 - Confidence-weighted missing keywords detection  
 - Real-time interactive radar chart  
 - AI rewrite suggestions powered by Google Gemini 1.5 Flash (via LiteLLM)  
-- Analysis history saved in SQLite  
+- Analysis history saved in PostgreSQL  
 - Glassmorphic Next.js + Tailwind UI  
 
 ## Tech Stack
@@ -45,7 +45,7 @@ Upload your resume + job description → Get instant match score, missing keywor
 cd backend
 python -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
-python -m spacy download en_core_web_lg
+python -m spacy download en_core_web_sm
 uvicorn app.main:app --reload
 
 # Frontend
