@@ -34,10 +34,10 @@ Upload your resume + job description → Get instant match score, missing keywor
 
 ## Tech Stack
 **Backend**  
-`Python • FastAPI • SpaCy (en_core_web_lg) • LiteLLM • pdfplumber • PyPDF2 • scikit-learn • SQLModel • SQLite`
+`Python 3.13 • FastAPI • SpaCy (en_core_web_sm) • LiteLLM • pdfplumber • PyPDF2 • scikit-learn • SQLModel • PostgreSQL`
 
 **Frontend**  
-`Next.js 14 (App Router) • Tailwind CSS • Recharts • Lucide Icons`
+`Next.js 16 • Tailwind CSS • Recharts • Lucide Icons`
 
 ## How to Run
 ```bash
