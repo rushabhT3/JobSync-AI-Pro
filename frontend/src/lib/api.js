@@ -1,4 +1,4 @@
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://jobsync-ai-pro.onrender.com';
 
 export const analyzeResume = async (formData) => {
   const res = await fetch(`${BACKEND_URL}/analyze`, {
