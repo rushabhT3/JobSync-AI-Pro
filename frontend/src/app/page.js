@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Navigation from '../components/ui/Navigation';
 import HeroSection from '../components/ui/HeroSection';
@@ -17,6 +17,19 @@ export default function Home() {
   const [files, setFiles] = useState({ resume: null, jd: null });
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const BACKEND_URL =
+    process.env.NEXT_PUBLIC_BACKEND_URL || "https://jobsync-ai-pro.onrender.com";
+
+  useEffect(() => {
+    const warmUp = () => {
+      try {
+        fetch(`${BACKEND_URL}/`, {timeout: 3000})
+        .catch(() => {});
+      } catch {}
+    }
+    warmUp();
+  }, [])
 
   const handleAnalyze = async () => {
     try {
