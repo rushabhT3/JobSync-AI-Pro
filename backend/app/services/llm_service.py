@@ -21,7 +21,7 @@ class LLMProviderFactory:
         configs = {
             "gemini": LLMConfig(
                 provider="gemini",
-                model="gemini/gemini-3.1-flash-lite-preview",
+                model="gemini/gemini-3.1-flash-lite",
                 api_key_env="GEMINI_API_KEY",
                 temperature=1.0,
                 reasoning_effort="low",
@@ -87,6 +87,6 @@ class GenericLLMService(ISuggestionService):
 
 # Backward compatibility
 class GeminiSuggestionService(GenericLLMService):
-    def __init__(self, model_name: str = "gemini/gemini-3.1-flash-lite-preview"):
+    def __init__(self, model_name: str = "gemini/gemini-3.1-flash-lite"):
         super().__init__("gemini")
         self.config.model = model_name
