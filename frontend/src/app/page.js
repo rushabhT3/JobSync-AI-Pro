@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Navigation from '../components/ui/Navigation';
 import HeroSection from '../components/ui/HeroSection';
+import FeatureShowcase from '../components/ui/FeatureShowcase';
 import AboutSection from '../components/ui/AboutSection';
 import AnalysisForm from '../components/features/AnalysisForm';
 import AnalysisResults from '../components/features/AnalysisResults';
@@ -64,39 +65,40 @@ export default function Home() {
       <Navigation />
 
       <main className="max-w-7xl mx-auto px-6 pt-12 pb-24">
-        {!result ? (
-          <div className="max-w-2xl mb-20">
-            <div className="space-y-8">
-              <HeroSection />
+        <div className="grid lg:grid-cols-2 gap-16 items-start mb-20">
+          <div className="space-y-8">
+            <HeroSection />
+            {!result && (
               <AnalysisForm
                 files={files}
                 onFilesChange={setFiles}
                 onSubmit={handleAnalyze}
                 loading={loading}
               />
-            </div>
+            )}
           </div>
-        ) : (
-          <div className="grid lg:grid-cols-2 gap-16 items-start mb-20">
-            <div className="space-y-8">
-              <HeroSection />
-            </div>
-            <div>
-              <div className="mb-6 flex justify-end">
-                <button
-                  onClick={handleReset}
-                  className="px-8 py-4 bg-[#0E3F35] text-white rounded-2xl font-display text-lg tracking-wide hover:bg-[#092C25] transition-all flex items-center gap-3 cursor-pointer"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                  </svg>
-                  Start Over
-                </button>
+
+          <div className="relative">
+            {!result ? (
+              <FeatureShowcase />
+            ) : (
+              <div>
+                <div className="mb-6 flex justify-end">
+                  <button
+                    onClick={handleReset}
+                    className="px-8 py-4 bg-[#0E3F35] text-white rounded-2xl font-display text-lg tracking-wide hover:bg-[#092C25] transition-all flex items-center gap-3 cursor-pointer"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Start Over
+                  </button>
+                </div>
+                <AnalysisResults result={result} />
               </div>
-              <AnalysisResults result={result} />
-            </div>
+            )}
           </div>
-        )}
+        </div>
 
         <AboutSection />
       </main>
